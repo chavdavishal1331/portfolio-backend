@@ -1,8 +1,7 @@
 import express from "express";
-import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
-import corsOptions from "./config/cors.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
@@ -14,13 +13,10 @@ import contactRoutes from "./routes/contactRoutes.js";
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// middleware — explicit CORS so admin/frontend on Render always work
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-  }
+  res.setHeader("Access-Control-Allow-Origin", origin || "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
@@ -29,17 +25,28 @@ app.use((req, res, next) => {
   }
   next();
 });
-app.use(cors(corsOptions));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// routes
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/skills", skillRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/contact", contactRoutes);
+
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, version: "admin-cors-fix" });
+});
+
+const adminDir = path.join(__dirname, "admin-dist");
+if (fs.existsSync(adminDir)) {
+  app.use("/admin", express.static(adminDir));
+  app.get(/^\/admin(\/.*)?$/, (req, res) => {
+    res.sendFile(path.join(adminDir, "index.html"));
+  });
+}
 
 export default app;
