@@ -18,9 +18,13 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.status(201).json(admin);
+    res.status(201).json({
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email,
+    });
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -41,8 +45,15 @@ export const login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    res.json({ token, admin });
+    res.json({
+      token,
+      admin: {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+      },
+    });
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };

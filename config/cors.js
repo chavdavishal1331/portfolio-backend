@@ -13,7 +13,12 @@ const allowedOrigins = [...localhostOrigins, ...envOrigins];
 
 const corsOptions = {
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin) || envOrigins.length === 0) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      envOrigins.length === 0 ||
+      origin.endsWith(".onrender.com")
+    ) {
       callback(null, true);
       return;
     }
