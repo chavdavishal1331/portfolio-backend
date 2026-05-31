@@ -1,6 +1,8 @@
 const allowedOrigins = [
   "https://portfolio-admin-oc7t.onrender.com",
+  "https://portfolio-admin.onrender.com",
   "https://portfolio-frontend-oc7t.onrender.com",
+  "https://portfolio-frontend-blu4.onrender.com",
   "https://portfolio-backend-ro4m.onrender.com",
   "http://localhost:3000",
   "http://localhost:3001",
@@ -26,7 +28,14 @@ const corsOptions = {
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "Accept",
+    "Cache-Control",
+    "Pragma",
+    "X-Requested-With",
+  ],
   maxAge: 86400,
   exposedHeaders: ["Content-Type"],
 };
