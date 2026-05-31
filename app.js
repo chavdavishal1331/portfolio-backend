@@ -5,6 +5,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 
 import corsOptions from "./config/cors.js";
+import { getUploadsDir } from "./config/uploads.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import skillRoutes from "./routes/skillRoutes.js";
@@ -39,7 +40,7 @@ app.use(
     res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
     next();
   },
-  express.static(path.join(__dirname, "uploads"))
+  express.static(getUploadsDir())
 );
 
 app.use("/api/auth", authRoutes);
