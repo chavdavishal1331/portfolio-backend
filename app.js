@@ -12,6 +12,7 @@ import skillRoutes from "./routes/skillRoutes.js";
 import projectRoutes from "./routes/projectRoutes.js";
 import experienceRoutes from "./routes/experienceRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +50,7 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/experience", experienceRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, version: "admin-cors-fix" });
