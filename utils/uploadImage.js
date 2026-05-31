@@ -1,8 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
 
-const baseUrl = () =>
-  `http://localhost:${process.env.PORT || 5000}`;
-
 const hasCloudinaryConfig = () =>
   process.env.CLOUDINARY_CLOUD_NAME &&
   process.env.CLOUDINARY_API_KEY &&
@@ -24,12 +21,12 @@ export async function resolveUploadedImageUrl(file) {
     throw new Error("Image upload failed");
   }
 
-  return `${baseUrl()}/uploads/${file.filename}`;
+  return `/uploads/${file.filename}`;
 }
 
 export function resolveLocalFileUrl(file) {
   if (!file?.filename) {
     throw new Error("File upload failed");
   }
-  return `${baseUrl()}/uploads/${file.filename}`;
+  return `/uploads/${file.filename}`;
 }
