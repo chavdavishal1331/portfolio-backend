@@ -25,7 +25,14 @@ app.use((err, req, res, next) => {
   }
   next(err);
 });
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
