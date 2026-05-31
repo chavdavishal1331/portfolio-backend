@@ -1,8 +1,10 @@
 import express from "express";
+import cors from "cors";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
+import corsOptions from "./config/cors.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import skillRoutes from "./routes/skillRoutes.js";
@@ -13,21 +15,16 @@ import contactRoutes from "./routes/contactRoutes.js";
 const app = express();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  res.setHeader("Access-Control-Allow-Origin", origin || "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(204);
-  }
-  next();
-});
-
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({ message: "Invalid JSON in request body" });
+  }
+  next(err);
+});
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);

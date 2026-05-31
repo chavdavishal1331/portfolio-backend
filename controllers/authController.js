@@ -7,6 +7,10 @@ export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    if (!name?.trim() || !email?.trim() || !password) {
+      return res.status(400).json({ message: "Name, email and password are required" });
+    }
+
     const exists = await Admin.findOne({ email });
     if (exists) return res.status(400).json({ message: "Admin already exists" });
 
@@ -33,7 +37,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const admin = await Admin.findOne({ email });
+    const admin = await Admin.findOne({ email }).select("+password");
     if (!admin) return res.status(400).json({ message: "Invalid email" });
 
     const isMatch = await bcrypt.compare(password, admin.password);
