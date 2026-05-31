@@ -53,7 +53,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/admin", adminRoutes);
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, version: "admin-cors-fix" });
+  res.json({ ok: true, version: "clear-content-v2" });
 });
 
 const adminDir = path.join(__dirname, "admin-dist");

@@ -5,7 +5,7 @@ services:
     buildCommand: |
       npm install
       git clone --depth 1 https://github.com/chavdavishal1331/portfolio-admin.git admin-build
-      cd admin-build && npm install && VITE_BASE_PATH=/admin/ npm run build && cp -r dist ../admin-dist
+      cd admin-build && npm install && VITE_BASE_PATH=/admin/ VITE_SAME_ORIGIN=true npm run build && cp -r dist ../admin-dist
     startCommand: npm start
     envVars:
       - key: NODE_VERSION
