@@ -3,11 +3,20 @@ import {
   resolveUploadedImageUrl,
   resolveLocalFileUrl,
 } from "../utils/uploadImage.js";
+import { normalizeAssetUrl } from "../utils/normalizeAssetUrl.js";
+
+function formatProfile(profile) {
+  if (!profile) return profile;
+  const obj = profile.toObject ? profile.toObject() : { ...profile };
+  if (obj.image) obj.image = normalizeAssetUrl(obj.image);
+  if (obj.resume) obj.resume = normalizeAssetUrl(obj.resume);
+  return obj;
+}
 
 export const getProfile = async (req, res) => {
   try {
     const profile = await Profile.findOne();
-    res.json(profile);
+    res.json(formatProfile(profile));
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -23,12 +32,13 @@ export const updateProfile = async (req, res) => {
 
     // Upload image if selected
     if (req.files?.image?.[0]) {
-      data.image = await resolveUploadedImageUrl(req.files.image[0]);
+      data.image = normalizeAssetUrl(
+        await resolveUploadedImageUrl(req.files.image[0])
+      );
     }
 
-    // Upload resume if selected
     if (req.files?.resume?.[0]) {
-      data.resume = resolveLocalFileUrl(req.files.resume[0]);
+      data.resume = normalizeAssetUrl(resolveLocalFileUrl(req.files.resume[0]));
     }
 
     // Convert roles string to array
@@ -54,7 +64,7 @@ export const updateProfile = async (req, res) => {
       profile = await Profile.create(data);
     }
 
-    res.json(profile);
+    res.json(formatProfile(profile));
   } catch (error) {
     console.error("Profile Update Error:", error);
     res.status(500).json({
