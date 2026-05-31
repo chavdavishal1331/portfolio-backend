@@ -14,6 +14,12 @@ const router = express.Router();
 router.get("/", getProjects);
 router.get("/:id", getProjectById);
 router.post("/", authMiddleware, runUpload(upload.single("image")), addProject);
+router.post(
+  "/:id",
+  authMiddleware,
+  runUpload(upload.single("image")),
+  updateProject
+);
 router.put(
   "/:id",
   authMiddleware,
