@@ -6,7 +6,7 @@ export const getSkills = async (req, res) => {
     const skills = await Skill.find();
     res.json(skills);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -16,7 +16,7 @@ export const addSkill = async (req, res) => {
     const skill = await Skill.create(req.body);
     res.status(201).json(skill);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -28,7 +28,7 @@ export const updateSkill = async (req, res) => {
     });
     res.json(skill);
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -38,6 +38,6 @@ export const deleteSkill = async (req, res) => {
     await Skill.findByIdAndDelete(req.params.id);
     res.json({ message: "Skill deleted" });
   } catch (error) {
-    res.status(500).json(error.message);
+    res.status(500).json({ message: error.message });
   }
 };
